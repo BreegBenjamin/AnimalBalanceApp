@@ -1,8 +1,6 @@
 ﻿using AnimalBalanceApp.Core.Entitis;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace AnimalBalanceApp.Infrastructure.Data
 {
     public partial class AnimalBalanceAppContext : DbContext
@@ -18,6 +16,7 @@ namespace AnimalBalanceApp.Infrastructure.Data
 
         public virtual DbSet<Animal> Animals { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Species> Species { get; set; }

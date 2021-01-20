@@ -10,6 +10,7 @@ namespace AnimalBalanceApp.Core.Entitis
         public Post()
         {
             Comments = new HashSet<Comment>();
+            Images = new HashSet<Image>();
         }
 
         public int PostId { get; set; }
@@ -21,5 +22,6 @@ namespace AnimalBalanceApp.Core.Entitis
 
         public virtual User User { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
     }
 }

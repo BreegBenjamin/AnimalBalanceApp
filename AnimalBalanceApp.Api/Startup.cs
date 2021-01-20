@@ -8,6 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using System;
+using FluentValidation.AspNetCore;
+using AnimalBalanceApp.Infrastructure.Filters;
 
 namespace AnimalBalanceApp.Api
 {
@@ -29,12 +33,24 @@ namespace AnimalBalanceApp.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AnimalBalanceApp.Api", Version = "v1" });
             });
+            services.AddControllers().AddNewtonsoftJson(opts=> 
+            {
+                opts.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
             //Register Repositorys
             services.AddTransient<IPostRepository, PostRepository>();
             //Register DB Context
             services.AddDbContext<AnimalBalanceAppContext>(db => 
             {
                 db.UseSqlServer(Configuration.GetConnectionString("AnimalBalanceDB"));
+            });
+            //Register Mapping
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //Register Validators
+            services.AddMvc(opts=> opts.Filters.Add<ValidationFilter>())
+            .AddFluentValidation(options=> 
+            {
+                options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             });
         }
 
