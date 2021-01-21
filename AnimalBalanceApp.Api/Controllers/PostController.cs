@@ -1,6 +1,6 @@
 ﻿using AnimalBalanceApp.Api.Responses;
 using AnimalBalanceApp.Core.DTOs;
-using AnimalBalanceApp.Core.Entitis;
+using AnimalBalanceApp.Core.Entities;
 using AnimalBalanceApp.Core.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -13,18 +13,18 @@ namespace AnimalBalanceApp.Api.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        private readonly IPostRepository _postRepository;
+        private readonly IPostService _posService;
         private readonly IMapper _mapper;
-        public PostController(IPostRepository postRepository, IMapper mapper)
+        public PostController(IPostService postRepository, IMapper mapper)
         {
-            _postRepository = postRepository;
+            _posService = postRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPosts() 
+        public IActionResult GetPosts() 
         {
-            var post = await _postRepository.GetPosts();
+            var post =  _posService.GetPosts();
             var postsDto = _mapper.Map<IEnumerable<PostDto>>(post);
             var response = new ApiResponse<IEnumerable<PostDto>>(postsDto);
             return Ok(response);
@@ -33,7 +33,7 @@ namespace AnimalBalanceApp.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPostForId(int id) 
         {
-            var post = await _postRepository.GetPostForId(id);
+            var post = await _posService.GetPostForId(id);
             var postDto = _mapper.Map<PostDto>(post);
             var response = new ApiResponse<PostDto>(postDto);
             return Ok(response);
@@ -43,7 +43,7 @@ namespace AnimalBalanceApp.Api.Controllers
         public async Task<IActionResult> InsertPost(PostDto postDto)
         {
             var post = _mapper.Map<Post>(postDto);
-            await _postRepository.InsertPost(post);
+            await _posService.InsertPost(post);
             postDto = _mapper.Map<PostDto>(post);
             var response = new ApiResponse<PostDto>(postDto);
             return Ok(response);
@@ -53,7 +53,7 @@ namespace AnimalBalanceApp.Api.Controllers
         public async Task<IActionResult> UpdatePost(PostDto postDto)
         {
             var post = _mapper.Map<Post>(postDto);
-            bool result = await _postRepository.UpdatePost(post);
+            bool result = await _posService.UpdatePost(post);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }
@@ -63,7 +63,7 @@ namespace AnimalBalanceApp.Api.Controllers
             if (id <= 0)
                 return BadRequest("El id es incorrecto");
 
-            bool result =  await _postRepository.DeletePost(id);
+            bool result =  await _posService.DeletePost(id);
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-
-#nullable disable
-
-namespace AnimalBalanceApp.Core.Entitis
+﻿
+namespace AnimalBalanceApp.Core.Entities
 {
     public partial class Product
     {

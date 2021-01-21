@@ -1,4 +1,4 @@
-﻿using AnimalBalanceApp.Core.Entitis;
+﻿using AnimalBalanceApp.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +10,7 @@ namespace AnimalBalanceApp.Infrastructure.Data.Configurations
         {
             builder.ToTable("Post");
 
-            builder.Property(e => e.PostId).HasColumnName("PostID");
+            builder.Property(e => e.Id).HasColumnName("PostID");
 
             builder.Property(e => e.Category)
                 .HasMaxLength(100)

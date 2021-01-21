@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
-namespace AnimalBalanceApp.Core.Entitis
+namespace AnimalBalanceApp.Core.Entities
 {
-    public partial class Post
+    public partial class Post : BaseEntity
     {
         public Post()
         {
@@ -13,7 +11,6 @@ namespace AnimalBalanceApp.Core.Entitis
             Images = new HashSet<Image>();
         }
 
-        public int PostId { get; set; }
         public int UserId { get; set; }
         public string PostDescription { get; set; }
         public string Category { get; set; }

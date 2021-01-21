@@ -12,6 +12,7 @@ using AutoMapper;
 using System;
 using FluentValidation.AspNetCore;
 using AnimalBalanceApp.Infrastructure.Filters;
+using AnimalBalanceApp.Core.Services.Logic;
 
 namespace AnimalBalanceApp.Api
 {
@@ -33,12 +34,17 @@ namespace AnimalBalanceApp.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AnimalBalanceApp.Api", Version = "v1" });
             });
-            services.AddControllers().AddNewtonsoftJson(opts=> 
+            services.AddControllers(option=> 
+            {
+                option.Filters.Add<GlobalExceptionFilter>();
+            })
+            .AddNewtonsoftJson(opts=> 
             {
                 opts.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             //Register Repositorys
-            services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IRepository<>), typeof(BaseSocialRepository<>));
             //Register DB Context
             services.AddDbContext<AnimalBalanceAppContext>(db => 
             {
@@ -52,6 +58,8 @@ namespace AnimalBalanceApp.Api
             {
                 options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             });
+            //Register services
+            services.AddTransient<IPostService, PostService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-#nullable disable
-
-namespace AnimalBalanceApp.Core.Entitis
+namespace AnimalBalanceApp.Core.Entities
 {
-    public partial class Animal
+    public partial class Animal : BaseEntity
     {
         public Animal()
         {
             Products = new HashSet<Product>();
         }
 
-        public int AnimalId { get; set; }
         public int SpecieId { get; set; }
         public string AnimalName { get; set; }
         public string Price { get; set; }

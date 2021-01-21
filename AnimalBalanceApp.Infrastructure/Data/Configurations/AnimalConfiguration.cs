@@ -1,4 +1,4 @@
-﻿using AnimalBalanceApp.Core.Entitis;
+﻿using AnimalBalanceApp.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,7 +8,7 @@ namespace AnimalBalanceApp.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Animal> builder)
         {
-            builder.Property(e => e.AnimalId).HasColumnName("AnimalID");
+            builder.Property(e => e.Id).HasColumnName("AnimalID");
 
             builder.Property(e => e.AgeForSale)
                 .HasMaxLength(100)

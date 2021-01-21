@@ -1,4 +1,4 @@
-﻿using AnimalBalanceApp.Core.Entitis;
+﻿using AnimalBalanceApp.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
