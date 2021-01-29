@@ -26,6 +26,10 @@ namespace AnimalBalanceApp.Infrastructure.Data.Configurations
                 .IsRequired()
                 .IsUnicode(false);
 
+            builder.Property(e => e.Title)
+                .IsRequired()
+                .IsUnicode(false);
+
             builder.Property(e => e.UserId).HasColumnName("UserID");
 
             builder.HasOne(d => d.User)

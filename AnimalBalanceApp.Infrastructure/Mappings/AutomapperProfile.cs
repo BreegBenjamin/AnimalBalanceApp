@@ -1,5 +1,5 @@
 ﻿using AnimalBalanceApp.Core.DTOs;
-using AnimalBalanceApp.Core.Entitis;
+using AnimalBalanceApp.Core.Entities;
 using AutoMapper;
 
 namespace AnimalBalanceApp.Infrastructure.Mappings
@@ -10,6 +10,10 @@ namespace AnimalBalanceApp.Infrastructure.Mappings
         {
             CreateMap<Post, PostDto>();
             CreateMap<PostDto, Post>();
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+            CreateMap<Comment, CommentDto>();
+            CreateMap<CommentDto, Comment>();
         }
     }
 }

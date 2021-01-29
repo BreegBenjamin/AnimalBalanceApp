@@ -1,11 +1,16 @@
 ﻿using AnimalBalanceApp.Api.Responses;
+using AnimalBalanceApp.Core.CustomEntities;
 using AnimalBalanceApp.Core.DTOs;
 using AnimalBalanceApp.Core.Entities;
 using AnimalBalanceApp.Core.Interfaces;
+using AnimalBalanceApp.Core.QueryFilter;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using System.Text.Json;
+using AnimalBalanceApp.Infrastructure.Interfaces;
 
 namespace AnimalBalanceApp.Api.Controllers
 {
@@ -15,21 +20,43 @@ namespace AnimalBalanceApp.Api.Controllers
     {
         private readonly IPostService _posService;
         private readonly IMapper _mapper;
-        public PostController(IPostService postRepository, IMapper mapper)
+        private readonly IUriService _uriService;
+        public PostController(IPostService postRepository, IMapper mapper, IUriService uriService)
         {
             _posService = postRepository;
             _mapper = mapper;
+            _uriService = uriService;
         }
 
-        [HttpGet]
-        public IActionResult GetPosts() 
+        [HttpGet(Name = nameof(GetPosts))]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Produces(typeof(ApiResponse<IEnumerable<PostDto>>))]
+        public IActionResult GetPosts([FromQuery] PostQueryFilter filters) 
         {
-            var post =  _posService.GetPosts();
-            var postsDto = _mapper.Map<IEnumerable<PostDto>>(post);
-            var response = new ApiResponse<IEnumerable<PostDto>>(postsDto);
+            var posts =  _posService.GetPosts(filters);
+            var postsDto = _mapper.Map<IEnumerable<PostDto>>(posts);
+            var metadata = new Metadata() 
+            {
+                TotalPages = posts.TotalPages,
+                CurrentPage = posts.CurrentPage,
+                PageSize = posts.PageSize,
+                TotalCount = posts.TotalCount,
+                HasNextsPage = posts.HasNextsPage,
+                HasPreviousPage = posts.HasPreviousPage,
+                NextPageUrl = _uriService.GetPostPaginatorUri(filters, Url.RouteUrl(nameof(GetPosts))),
+                PreviousPageUrl = _uriService.GetPostPaginatorUri(filters, Url.RouteUrl(nameof(GetPosts))),
+                Action = nameof(GetPosts)
+            };
+            var response = new ApiResponse<IEnumerable<PostDto>>(postsDto) 
+            {
+                Meta = metadata,
+            };
+
+            Response.Headers.Add("X-Pagination",  JsonSerializer.Serialize(metadata));
+
             return Ok(response);
         }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPostForId(int id) 
         {
@@ -39,7 +66,6 @@ namespace AnimalBalanceApp.Api.Controllers
             return Ok(response);
         }
         [HttpPost]
-
         public async Task<IActionResult> InsertPost(PostDto postDto)
         {
             var post = _mapper.Map<Post>(postDto);
@@ -48,7 +74,6 @@ namespace AnimalBalanceApp.Api.Controllers
             var response = new ApiResponse<PostDto>(postDto);
             return Ok(response);
         }
-
         [HttpPut]
         public async Task<IActionResult> UpdatePost(PostDto postDto)
         {

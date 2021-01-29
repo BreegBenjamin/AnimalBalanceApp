@@ -8,7 +8,7 @@ namespace AnimalBalanceApp.Core.Interfaces
     {
         IPostRepository PostRepository { get; }
         IRepository<User> UserRepository { get; }
-        IRepository<Comment> CommentRepository { get; }
+        ICommentRepository CommentRepository { get; }
         void SaveChanged();
         Task<bool> SaveChangedAsync();
     }

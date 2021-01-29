@@ -13,6 +13,10 @@ using System;
 using FluentValidation.AspNetCore;
 using AnimalBalanceApp.Infrastructure.Filters;
 using AnimalBalanceApp.Core.Services.Logic;
+using AnimalBalanceApp.Infrastructure.Services;
+using AnimalBalanceApp.Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Http;
+using AnimalBalanceApp.Core.CustomEntities;
 
 namespace AnimalBalanceApp.Api
 {
@@ -34,32 +38,46 @@ namespace AnimalBalanceApp.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AnimalBalanceApp.Api", Version = "v1" });
             });
-            services.AddControllers(option=> 
+            services.AddControllers(option =>
             {
                 option.Filters.Add<GlobalExceptionFilter>();
             })
-            .AddNewtonsoftJson(opts=> 
+            .AddNewtonsoftJson(opts =>
             {
                 opts.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                opts.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             });
+
+            //congiguration
+            services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
+
             //Register Repositorys
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseSocialRepository<>));
             //Register DB Context
-            services.AddDbContext<AnimalBalanceAppContext>(db => 
+            services.AddDbContext<AnimalBalanceAppContext>(db =>
             {
                 db.UseSqlServer(Configuration.GetConnectionString("AnimalBalanceDB"));
             });
             //Register Mapping
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             //Register Validators
-            services.AddMvc(opts=> opts.Filters.Add<ValidationFilter>())
-            .AddFluentValidation(options=> 
+            services.AddMvc(opts => opts.Filters.Add<ValidationFilter>())
+            .AddFluentValidation(options =>
             {
                 options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             });
             //Register services
             services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddSingleton<IUriService>(provaider => 
+            {
+                var accesor = provaider.GetRequiredService<IHttpContextAccessor>();
+                HttpRequest request = accesor.HttpContext.Request;
+                string absoluteUri = string.Concat(request.Scheme, "://",request.Host.ToUriComponent());
+                return new UriService(absoluteUri);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

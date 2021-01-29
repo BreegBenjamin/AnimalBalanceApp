@@ -17,4 +17,15 @@ namespace AnimalBalanceApp.Core.Exceptions
 
         }
     }
+    public class  ParameterException : Exception
+    {
+        public ParameterException()
+        {
+
+        }
+        public ParameterException(string message) : base(message)
+        {
+                
+        }
+    }
 }

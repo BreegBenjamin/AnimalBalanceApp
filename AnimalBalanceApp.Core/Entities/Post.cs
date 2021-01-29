@@ -12,6 +12,7 @@ namespace AnimalBalanceApp.Core.Entities
         }
 
         public int UserId { get; set; }
+        public string Title { get; set; }
         public string PostDescription { get; set; }
         public string Category { get; set; }
         public DateTime DatePost { get; set; }
