@@ -21,7 +21,7 @@ namespace AnimalBalanceApp.Infrastructure.Repositories
         {
             return _entitis.AsEnumerable();
         }
-        public async Task<T> GetForId(int id)
+        public async Task<T> GetById(int id)
         {
             return await _entitis.FindAsync(id);
         }
@@ -36,7 +36,7 @@ namespace AnimalBalanceApp.Infrastructure.Repositories
         }
         public async Task Delete(int id)
         {
-            T entity = await GetForId(id);
+            T entity = await GetById(id);
             _entitis.Remove(entity);
         }
     }

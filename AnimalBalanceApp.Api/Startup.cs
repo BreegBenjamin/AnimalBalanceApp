@@ -1,22 +1,16 @@
 using AnimalBalanceApp.Core.Interfaces;
-using AnimalBalanceApp.Infrastructure.Data;
+using AnimalBalanceApp.Infrastructure.Extensions;
+using AnimalBalanceApp.Infrastructure.Filters;
 using AnimalBalanceApp.Infrastructure.Repositories;
+using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using System;
-using FluentValidation.AspNetCore;
-using AnimalBalanceApp.Infrastructure.Filters;
-using AnimalBalanceApp.Core.Services.Logic;
-using AnimalBalanceApp.Infrastructure.Services;
-using AnimalBalanceApp.Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Http;
-using AnimalBalanceApp.Core.CustomEntities;
 
 namespace AnimalBalanceApp.Api
 {
@@ -32,7 +26,6 @@ namespace AnimalBalanceApp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -41,24 +34,19 @@ namespace AnimalBalanceApp.Api
             services.AddControllers(option =>
             {
                 option.Filters.Add<GlobalExceptionFilter>();
-            })
+            })  
             .AddNewtonsoftJson(opts =>
             {
                 opts.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 opts.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             });
-
-            //congiguration
-            services.Configure<PaginationOptions>(Configuration.GetSection("Pagination"));
-
+            //congigurations
+            services.AddSettingsOptions(Configuration);
             //Register Repositorys
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(BaseSocialRepository<>));
             //Register DB Context
-            services.AddDbContext<AnimalBalanceAppContext>(db =>
-            {
-                db.UseSqlServer(Configuration.GetConnectionString("AnimalBalanceDB"));
-            });
+            services.AddDBContext(Configuration);
             //Register Mapping
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             //Register Validators
@@ -68,16 +56,9 @@ namespace AnimalBalanceApp.Api
                 options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             });
             //Register services
-            services.AddTransient<IPostService, PostService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICommentService, CommentService>();
-            services.AddSingleton<IUriService>(provaider => 
-            {
-                var accesor = provaider.GetRequiredService<IHttpContextAccessor>();
-                HttpRequest request = accesor.HttpContext.Request;
-                string absoluteUri = string.Concat(request.Scheme, "://",request.Host.ToUriComponent());
-                return new UriService(absoluteUri);
-            });
+            services.AddServices();
+            //Authentication
+            services.AddAuthentication(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,6 +74,8 @@ namespace AnimalBalanceApp.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

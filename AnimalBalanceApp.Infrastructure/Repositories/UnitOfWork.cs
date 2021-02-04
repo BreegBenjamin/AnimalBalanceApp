@@ -11,6 +11,7 @@ namespace AnimalBalanceApp.Infrastructure.Repositories
         private readonly IPostRepository _postRepository;
         private readonly IRepository<User> _userRepository;
         private readonly ICommentRepository _commentRepository;
+        private readonly ISecurityRepository _securityRepository;
         public UnitOfWork(AnimalBalanceAppContext context)
         {
             _context = context;
@@ -18,6 +19,7 @@ namespace AnimalBalanceApp.Infrastructure.Repositories
         public IPostRepository PostRepository => _postRepository ?? new PostRepository(_context);
         public IRepository<User> UserRepository => _userRepository ?? new BaseSocialRepository<User>(_context);
         public ICommentRepository CommentRepository => _commentRepository ?? new CommentRepository(_context);
+        public ISecurityRepository SecurityRepository => _securityRepository ?? new SecurityRepository(_context);
         public void Dispose()
         {
             if (_context != null)

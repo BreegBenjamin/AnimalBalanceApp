@@ -33,7 +33,7 @@ namespace AnimalBalanceApp.Core.Services.Logic
         }
         public async Task<User> GetUserForId(int userId) 
         {
-            var userResut = await _unitOfWork.UserRepository.GetForId(userId);
+            var userResut = await _unitOfWork.UserRepository.GetById(userId);
             if (userResut == null)
                 throw new BusinessException("El usuario consultado no existe");
             else if (userResut.IsActive == 0)

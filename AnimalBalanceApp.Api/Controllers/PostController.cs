@@ -4,16 +4,18 @@ using AnimalBalanceApp.Core.DTOs;
 using AnimalBalanceApp.Core.Entities;
 using AnimalBalanceApp.Core.Interfaces;
 using AnimalBalanceApp.Core.QueryFilter;
+using AnimalBalanceApp.Infrastructure.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text.Json;
-using AnimalBalanceApp.Infrastructure.Interfaces;
 
 namespace AnimalBalanceApp.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : ControllerBase
@@ -52,9 +54,7 @@ namespace AnimalBalanceApp.Api.Controllers
             {
                 Meta = metadata,
             };
-
             Response.Headers.Add("X-Pagination",  JsonSerializer.Serialize(metadata));
-
             return Ok(response);
         }
         [HttpGet("{id}")]

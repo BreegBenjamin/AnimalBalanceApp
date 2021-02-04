@@ -8,12 +8,13 @@ namespace AnimalBalanceApp.Infrastructure.Mappings
     {
         public AutomapperProfile()
         {
-            CreateMap<Post, PostDto>();
-            CreateMap<PostDto, Post>();
-            CreateMap<User, UserDto>();
-            CreateMap<UserDto, User>();
-            CreateMap<Comment, CommentDto>();
-            CreateMap<CommentDto, Comment>();
+            CreateMap<Post, PostDto>().ReverseMap();
+
+            CreateMap<User, UserDto>().ReverseMap();
+
+            CreateMap<Comment, CommentDto>().ReverseMap();
+
+            CreateMap<Security, SecurityDto>().ReverseMap();
         }
     }
 }

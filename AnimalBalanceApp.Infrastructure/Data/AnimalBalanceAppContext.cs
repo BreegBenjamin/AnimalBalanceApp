@@ -21,6 +21,7 @@ namespace AnimalBalanceApp.Infrastructure.Data
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Species> Species { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Security> Security { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

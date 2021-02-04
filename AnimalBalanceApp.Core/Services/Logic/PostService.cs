@@ -23,7 +23,7 @@ namespace AnimalBalanceApp.Core.Services.Logic
         public PagedList<Post> GetPosts(PostQueryFilter filters)
         {
             filters.PageNumber = filters.PageNumber == 0 ? _paginationOptions.DefaultPageNumber : filters.PageNumber;
-            filters.PageSize = filters.PageSize == 0 ? _paginationOptions.MyPDefaultPageSize : filters.PageSize;
+            filters.PageSize = filters.PageSize == 0 ? _paginationOptions.DefaultPageSize : filters.PageSize;
 
             var posts = _unitOfWork.PostRepository.GetAll();
             if (filters.UserId != null)
@@ -38,7 +38,7 @@ namespace AnimalBalanceApp.Core.Services.Logic
         }
         public async Task<Post> GetPostForId(int id)
         {
-            return await _unitOfWork.PostRepository.GetForId(id);
+            return await _unitOfWork.PostRepository.GetById(id);
         }
         public async Task<bool> DeletePost(int id)
         {
@@ -47,7 +47,7 @@ namespace AnimalBalanceApp.Core.Services.Logic
         }
         public async Task InsertPost(Post post)
         {
-            var user = await _unitOfWork.UserRepository.GetForId(post.UserId);
+            var user = await _unitOfWork.UserRepository.GetById(post.UserId);
             if (user == null)
                 throw new BusinessException("No se encontro el usuario");
             post.DatePost = DateTime.Now;
@@ -55,7 +55,12 @@ namespace AnimalBalanceApp.Core.Services.Logic
         }
         public async Task<bool> UpdatePost(Post post)
         {
-            _unitOfWork.PostRepository.Update(post);
+            var postExists = await _unitOfWork.PostRepository.GetById(post.Id);
+            postExists.PostDescription = post.PostDescription;
+            postExists.Title = post.Title;
+            postExists.Category = post.Category;
+
+            _unitOfWork.PostRepository.Update(postExists);
             return await _unitOfWork.SaveChangedAsync();
         }
         public async Task<IEnumerable<Post>> GetPostsByUserId(int userId) 
