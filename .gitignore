@@ -339,4 +339,3 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 #Archivo json llaves
-AnimalBalanceApp.Api/appsettings.json
