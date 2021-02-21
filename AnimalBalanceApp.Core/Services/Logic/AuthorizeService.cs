@@ -1,6 +1,7 @@
 ﻿using AnimalBalanceApp.Core.CustomEntities;
 using AnimalBalanceApp.Core.Entities;
 using AnimalBalanceApp.Core.Interfaces;
+using AnimalBalanceApp.Core.Properties;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -25,10 +26,16 @@ namespace AnimalBalanceApp.Core.Services.Logic
             _authenticationOptions = options.Value;
             _passwordService = passwordService;
         }
-        public async Task<string> AuthenticateUser(UserLogin login) 
+        public async Task<(string, string)> AuthenticateUser(UserLogin login) 
         {
             var validInfo = await _isValidUser(login);
-            return (validInfo.Item1) ? _generateToken(validInfo.Item2) : "Invalid Credentials";
+            if (validInfo.Item1)
+            {
+                string token = _generateToken(validInfo.Item2);
+                return (token, _authenticationOptions.ExpireTokenText);
+            }
+            else
+                return (AppMessages.InvalidCredencial, AppMessages.NumberMinutosToken);
         }
         public async Task<bool> CreateUser(Security security)
             => await _securityService.RegisterUser(security);

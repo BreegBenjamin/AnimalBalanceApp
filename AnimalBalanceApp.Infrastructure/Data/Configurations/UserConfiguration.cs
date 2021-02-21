@@ -34,6 +34,11 @@ namespace AnimalBalanceApp.Infrastructure.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
+
+            builder.Property(e => e.UserPassword)
+                .IsRequired()
+                .HasMaxLength(200)
+                .IsUnicode(false);
         }
     }
 }

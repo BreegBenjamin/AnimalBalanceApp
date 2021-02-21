@@ -57,6 +57,7 @@ namespace AnimalBalanceApp.Api.Controllers
             Response.Headers.Add("X-Pagination",  JsonSerializer.Serialize(metadata));
             return Ok(response);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPostForId(int id) 
         {
@@ -65,6 +66,7 @@ namespace AnimalBalanceApp.Api.Controllers
             var response = new ApiResponse<PostDto>(postDto);
             return Ok(response);
         }
+
         [HttpPost]
         public async Task<IActionResult> InsertPost(PostDto postDto)
         {
@@ -74,6 +76,7 @@ namespace AnimalBalanceApp.Api.Controllers
             var response = new ApiResponse<PostDto>(postDto);
             return Ok(response);
         }
+
         [HttpPut]
         public async Task<IActionResult> UpdatePost(PostDto postDto)
         {
@@ -82,6 +85,7 @@ namespace AnimalBalanceApp.Api.Controllers
             var response = new ApiResponse<bool>(result);
             return Ok(response);
         }
+
         [HttpDelete ("{id}")]
         public async Task<IActionResult> DeletePost(int id )
         {

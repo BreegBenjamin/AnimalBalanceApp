@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using AnimalBalanceApp.Core.Exceptions;
+﻿using AnimalBalanceApp.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
-using System;
 
 namespace AnimalBalanceApp.Infrastructure.Filters
 {

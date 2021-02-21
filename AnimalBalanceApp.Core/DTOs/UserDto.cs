@@ -13,5 +13,6 @@ namespace AnimalBalanceApp.Core.DTOs
         public int IsActive { get; set; }
         public int UserType { get; set; }
         public string ImageName { get; set; }
+        public string UserPassword { get; set; }
     }
 }

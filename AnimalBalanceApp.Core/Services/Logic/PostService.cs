@@ -55,12 +55,12 @@ namespace AnimalBalanceApp.Core.Services.Logic
         }
         public async Task<bool> UpdatePost(Post post)
         {
-            var postExists = await _unitOfWork.PostRepository.GetById(post.Id);
-            postExists.PostDescription = post.PostDescription;
-            postExists.Title = post.Title;
-            postExists.Category = post.Category;
+            var existingPost = await _unitOfWork.PostRepository.GetById(post.Id);
+            existingPost.PostDescription = post.PostDescription;
+            existingPost.Title = post.Title;
+            existingPost.Category = post.Category;
 
-            _unitOfWork.PostRepository.Update(postExists);
+            _unitOfWork.PostRepository.Update(existingPost);
             return await _unitOfWork.SaveChangedAsync();
         }
         public async Task<IEnumerable<Post>> GetPostsByUserId(int userId) 

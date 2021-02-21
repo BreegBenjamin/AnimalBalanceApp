@@ -19,6 +19,7 @@ namespace AnimalBalanceApp.Core.Entities
         public int IsActive { get; set; }
         public int UserType { get; set; }
         public string ImageName { get; set; }
+        public string UserPassword { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Post> Posts { get; set; }

@@ -11,5 +11,6 @@
         public string NextPageUrl { get; set; }
         public string PreviousPageUrl { get; set; }
         public string Action { get; set; }
+        public string ExpiresToken { get; set; }
     }
 }
