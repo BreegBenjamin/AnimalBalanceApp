@@ -25,17 +25,17 @@ namespace AnimalBalanceApp.Api.Controllers
         [HttpGet("{postId}")]
         public async Task<IActionResult> GetCommentsForPostId(int postId) 
         {
-            var response = await _getCommentsResponse(postId, false);
+            var response = await _getCommentsResponseAsync(postId, false);
             return Ok(response);
         }
         [ActionName("GetCommentsUser")]
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetCommentsForUserId(int userId) 
         {
-            var response = await _getCommentsResponse(userId, true);
+            var response = await _getCommentsResponseAsync(userId, true);
             return Ok(response);
         }
-        private async Task<ApiResponse<IEnumerable<CommentDto>>> _getCommentsResponse(int id, bool isUser) 
+        private async Task<ApiResponse<IEnumerable<CommentDto>>> _getCommentsResponseAsync(int id, bool isUser) 
         {
             if (id <= 0)
                 throw new ParameterException("El Id ingresado es invalido");

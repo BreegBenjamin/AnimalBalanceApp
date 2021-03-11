@@ -35,7 +35,7 @@ namespace AnimalBalanceApp.Api.Controllers
         {
             var autResult = await _authorizationService.AuthenticateUser(login);
             string token = autResult.Item1;
-            var metadata = new Metadata()
+            var metadata = new Metadata
             {
                 ExpiresToken = autResult.Item2
             };
